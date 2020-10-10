@@ -14,7 +14,10 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "paths": {
+      "@database/*": ["../blog-api/core/database/*"]
+    }
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,
