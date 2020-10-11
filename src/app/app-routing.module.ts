@@ -12,6 +12,13 @@ const routes: Routes = [
     loadChildren: () =>
       import('./pages/login/login.module').then((m) => m.LoginPageModule),
   },
+  {
+    path: 'usuario/cadastro',
+    loadChildren: () =>
+      import('./pages/usuario/cadastro/cadastro.module').then(
+        (m) => m.CadastroPageModule
+      ),
+  },
 ];
 
 @NgModule({
