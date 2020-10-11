@@ -1,22 +1,29 @@
-<form>
+<form [formGroup]="form">
   <ion-card>
     <ion-card-content>
       <ion-item>
         <ion-label position="floating">Nome</ion-label>
-        <ion-input></ion-input>
+        <ion-input formControlName="name"></ion-input>
       </ion-item>
+      <ngx-message-error formControlName="name"></ngx-message-error>
       <ion-item>
         <ion-label position="floating">Email</ion-label>
-        <ion-input></ion-input>
+        <ion-input formControlName="username"></ion-input>
       </ion-item>
+      <ngx-message-error formControlName="username"></ngx-message-error>
       <ion-item>
         <ion-label position="floating">Senha</ion-label>
-        <ion-input type="password"></ion-input>
+        <ion-input formControlName="password" type="password"></ion-input>
       </ion-item>
+      <ngx-message-error formControlName="password"></ngx-message-error>
       <ion-item>
         <ion-label position="floating">Confirmação de senha</ion-label>
-        <ion-input type="password"></ion-input>
+        <ion-input formControlName="confirm" type="password"></ion-input>
       </ion-item>
+      <ngx-message-error
+        formControlName="confirm"
+        [messages]="{ equalTo: 'Senhas digitadas não conferem' }"
+      ></ngx-message-error>
       <div class="action-container">
         <ion-button>
           <label>Submit</label>
