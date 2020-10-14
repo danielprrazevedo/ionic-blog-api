@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -6,6 +7,11 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
+
+import { IUser } from '@database/user';
+import { ToastController } from '@ionic/angular';
+
+import { omit } from 'lodash';
 
 @Component({
   selector: 'blog-usuario-form',
@@ -15,7 +21,13 @@ import {
 export class UsuarioFormComponent implements OnInit {
   public form: FormGroup;
 
-  constructor(private fb: FormBuilder) {}
+  @Output() submitForm = new EventEmitter<Partial<IUser>>();
+
+  constructor(
+    private fb: FormBuilder,
+    private toastCtrl: ToastController,
+    private http: HttpClient
+  ) {}
 
   ngOnInit() {
     const equalTo = (control: AbstractControl): ValidationErrors | null => {
@@ -26,11 +38,41 @@ export class UsuarioFormComponent implements OnInit {
       return password.value !== control.value ? { equalTo: true } : null;
     };
 
+    const checkUsername = async (
+      control: AbstractControl
+    ): Promise<ValidationErrors | null> => {
+      const result = await this.http
+        .get(`http://localhost:3000/user/username-exists/${control.value}`)
+        .toPromise<any>();
+
+      if (result.exists) {
+        return {
+          checkUsername: true,
+        };
+      }
+
+      return null;
+    };
+
     this.form = this.fb.group({
       name: ['', [Validators.required]],
-      username: ['', [Validators.required, Validators.email]],
+      username: ['', [Validators.required, Validators.email], [checkUsername]],
       password: ['', [Validators.required, Validators.minLength(5)]],
       confirm: ['', [Validators.required, Validators.minLength(5), equalTo]],
     });
+  }
+
+  async submit() {
+    if (!this.form.valid) {
+      const toast = await this.toastCtrl.create({
+        message: 'Formulário inválido',
+        duration: 3000,
+      });
+      toast.present();
+      return;
+    }
+    this.submitForm.emit(
+      omit<IUser>(this.form.value, ['confirm'])
+    );
   }
 }
