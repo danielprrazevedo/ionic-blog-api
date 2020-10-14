@@ -1,4 +1,4 @@
-<form>
+<form [formGroup]="form" (ngSubmit)="formSubmit.emit(form.value)">
   <ion-card>
     <ion-card-header>
       <ion-card-title> Login </ion-card-title>
@@ -6,14 +6,16 @@
     <ion-card-content>
       <ion-item>
         <ion-label position="floating">Usuário</ion-label>
-        <ion-input></ion-input>
+        <ion-input formControlName="username"></ion-input>
       </ion-item>
+      <ngx-message-error formControlName="username"></ngx-message-error>
       <ion-item>
         <ion-label position="floating">Senha</ion-label>
-        <ion-input type="password"></ion-input>
+        <ion-input type="password" formControlName="password"></ion-input>
       </ion-item>
+      <ngx-message-error formControlName="password"></ngx-message-error>
       <div class="container-actions">
-        <ion-button>
+        <ion-button type="submit" [disabled]="!form.valid">
           <span>Login</span>
           <ion-icon name="send" slot="end"></ion-icon
         ></ion-button>
