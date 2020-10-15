@@ -2,6 +2,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
+import { LoginRequestService } from 'src/app/requests/auth/login-request.service';
 
 @Component({
   selector: 'app-login',
@@ -10,15 +11,15 @@ import { AlertController } from '@ionic/angular';
 })
 export class LoginPage implements OnInit {
   constructor(
-    private http: HttpClient,
     private alertCtrl: AlertController,
-    private router: Router
+    private router: Router,
+    private service: LoginRequestService
   ) {}
 
   ngOnInit() {}
 
   login(event: any) {
-    this.http.post('http://localhost:3000/auth/login', event).subscribe(
+    this.service.post(event).subscribe(
       (result: any) => {
         localStorage.setItem('token', result.access_token);
         this.router.navigate(['/home']);

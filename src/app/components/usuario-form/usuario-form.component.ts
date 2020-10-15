@@ -12,6 +12,7 @@ import { IUser } from '@database/user';
 import { ToastController } from '@ionic/angular';
 
 import { omit } from 'lodash';
+import { UserRequestService } from 'src/app/requests/user/user-request.service';
 
 @Component({
   selector: 'blog-usuario-form',
@@ -26,7 +27,7 @@ export class UsuarioFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private toastCtrl: ToastController,
-    private http: HttpClient
+    private service: UserRequestService
   ) {}
 
   ngOnInit() {
@@ -41,8 +42,8 @@ export class UsuarioFormComponent implements OnInit {
     const checkUsername = async (
       control: AbstractControl
     ): Promise<ValidationErrors | null> => {
-      const result = await this.http
-        .get(`http://localhost:3000/user/username-exists/${control.value}`)
+      const result = await this.service
+        .get(`username-exists/${control.value}`)
         .toPromise<any>();
 
       if (result.exists) {

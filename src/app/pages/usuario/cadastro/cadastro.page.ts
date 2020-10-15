@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { IUser } from '@database/user';
 import { ToastController } from '@ionic/angular';
+import { UserRequestService } from 'src/app/requests/user/user-request.service';
 
 @Component({
   selector: 'blog-cadastro',
@@ -11,17 +12,15 @@ import { ToastController } from '@ionic/angular';
 })
 export class CadastroPage implements OnInit {
   constructor(
-    private http: HttpClient,
     private toastCtrl: ToastController,
-    private route: Router
+    private route: Router,
+    private service: UserRequestService
   ) {}
 
   ngOnInit() {}
 
   async submitForm(user: Partial<IUser>) {
-    const result = await this.http
-      .post<IUser>('http://localhost:3000/user', user)
-      .toPromise<IUser>();
+    await this.service.post(user).toPromise();
 
     const toast = await this.toastCtrl.create({
       message: 'Usuário criado com sucesso',
